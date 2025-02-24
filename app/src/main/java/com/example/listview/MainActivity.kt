@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Using a fragment container as the only component in my main view
+        // Look in ./ui/movies/MoviesFragment.kt
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, MoviesFragment())

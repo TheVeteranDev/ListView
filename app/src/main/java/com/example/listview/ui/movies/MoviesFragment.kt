@@ -24,12 +24,16 @@ class MoviesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Never used... yet
         val viewModel =
             ViewModelProvider(this).get(MoviesView::class.java)
 
+        // Creates a binding to the layout for this fragment
+        // res/layout/fragment_movies.xml
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // Create a list of movies for the list view to use
         val movies = listOf(
             Movie("Star Wars Episode VI: The Empire Strikes Back", "The adventure continues.", R.drawable.empire_strikes_back),
             Movie("Ghostbusters", "Who you gonna call?", R.drawable.ghostbusters),
@@ -41,25 +45,37 @@ class MoviesFragment : Fragment() {
             Movie("Jurassic Park", "Rawwwwrrrrrr", R.drawable.jurassicpark)
         )
 
+        // Sort the movies alphabetically by title
         val sortedMovies = movies.sortedBy { it.getTitle() }
+
+        // Using an adapter to handle the individual views of each movie in the list
         val adapter = MovieAdapter(requireContext(), sortedMovies)
 
+        // Bind the adapter to the list view
         binding.movieListView.adapter = adapter
+
+        // Create an on click event to send the user to the movie detail activity
         binding.movieListView.setOnItemClickListener { _, _, i, _ ->
             val selectedMovie = sortedMovies[i]
 
+            // Set the values for the intent that are passed to the movie detail activity
             val intent = Intent(requireContext(), MovieDetailActivity::class.java).apply {
                 putExtra("title", selectedMovie.getTitle())
                 putExtra("subTitle", selectedMovie.getSubTitle())
                 putExtra("boxArt", selectedMovie.getBoxArtDrawable())
             }
 
+            // sets a result to return when the user closes the movie detail activity
             startActivityForResult(intent, 100)
         }
 
         return root
     }
 
+    /**
+     * Handles the activity result from the movie detail activity
+     * This will display a snackbar letting the user know they returned to the list view
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
